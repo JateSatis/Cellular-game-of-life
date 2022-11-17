@@ -1,0 +1,105 @@
+body {
+  background-color: #dfdf90;
+  display: flex;
+  justify-content: space-between;
+  z-index: 10;
+  overflow: hidden;
+}
+
+nav {
+  width: 30%;
+  z-index: inherit;
+  background-color: #dfdf90;
+  border-left: 1vh solid black;
+}
+
+#main {
+  width: 70%;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #fbf0bf;
+  z-index: 0;
+}
+
+#main_draggable_container {
+  position: absolute;
+  top: 2%;
+  left: 31%;
+  right: 0px;
+}
+
+.cell_row {
+  display: flex;
+}
+
+.cell {
+  margin: 1px;
+  display: grid;
+  align-items: center;
+  text-align: center;
+  min-width: 20px;
+  min-height: 20px;
+  font-size: 0;
+  transition: 0.1s linear;
+}
+
+.cell_dead {
+  background-color: #372725;
+}
+
+.cell_alive {
+  background-color: #78862d;
+}
+
+button {
+  position: relative;
+  display: grid;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  width: 20vw;
+  height: 10vh;
+  font-size: 5vh;
+  border: 2px solid white;
+}
+
+button:not(:nth-child(1)) {
+  margin-top: 10vh;
+}
+
+.bg-image {
+  transition: 0.5s cubic-bezier(0, 0.68, 0.59, 1.07);
+  width: 100%;
+  margin-top: -30%;
+  opacity: 0;
+}
+
+p {
+  color: black;
+  font-weight: bold;
+  text-decoration: none;
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+  font-size: 5vh !important;
+}
+
+p::after {
+  display: block;
+  content: "";
+  width: 0%;
+  height: 0.3vh;
+  background-color: black;
+  transition: 1s cubic-bezier(0, 0.68, 0.59, 1.07);
+}
+
+button:hover p::after {
+  width: 100%;
+  transition: 1s cubic-bezier(0, 0.68, 0.59, 1.07);
+}
+
+.field_size_input {
+  width: 20vw;
+  height: 10vh;
+  font-size: 5vh;
+}
