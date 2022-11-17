@@ -2,6 +2,7 @@ body {
   background-color: #dfdf90;
   display: flex;
   justify-content: space-between;
+  /* Большой индекс, для того, чтобы можно было скрыть поле под навигацией */
   z-index: 10;
   overflow: hidden;
 }
@@ -10,13 +11,12 @@ nav {
   width: 30%;
   z-index: inherit;
   background-color: #dfdf90;
-  border-left: 1vh solid black;
+  border-right: 1vh solid black;
 }
 
 #main {
   width: 70%;
   height: 100vh;
-  overflow: hidden;
   background-color: #fbf0bf;
   z-index: 0;
 }

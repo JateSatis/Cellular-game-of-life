@@ -147,7 +147,8 @@ const game = {
       const row = document.createElement("div");
       row.id = i;
       row.className = "cell_row";
-      for (let j = 0; j < size; j++) {
+			for (let j = 0; j < size; j++) {
+				// Создаем элемент, являющийся презентацией микроба на сайте
         const cell = document.createElement("div");
         cell.className = "cell";
         cell.setAttribute("onclick", `game.changeCellState(event, ${i}, ${j})`);
@@ -159,31 +160,36 @@ const game = {
       }
       main.appendChild(row);
     }
-    console.log(this.field);
   },
 
   // Полностью очищает поле
   clearField() {
-    const button = document.getElementById("startSimulation");
+		const button = document.getElementById("startSimulation");
+		// Очищает интервал, обновляющий симуляцию
     clearInterval(this.timer);
-    this.timer = setInterval(() => this.displayField(), 100000000);
+		this.timer = setInterval(() => this.displayField(), 100000000);
+		// Изменяет значение кнопки старт
     button.getElementsByTagName("p")[0].innerHTML = "Start";
-    this.isActive = false;
+		this.isActive = false;
+		// Очищает поле
     this.field = Array.apply(null, Array(100)).map((item) => {
       return Array.apply(null, Array(100)).map(function (item) {
         return 0;
       });
-    });
+		});
+		// Выводит его
     this.displayField();
   },
 
   // Запускает симуляцию
   startSimulation() {
-    const button = document.getElementById("startSimulation");
+		const button = document.getElementById("startSimulation");
+		// Логика замены слова внутри кнопки
     button.getElementsByTagName("p")[0].innerHTML == "Start"
       ? (button.getElementsByTagName("p")[0].innerHTML = "Stop")
       : (button.getElementsByTagName("p")[0].innerHTML = "Start");
 
+		// Постановка интервала, который будет отвечать за скорость обновления симуляции
     if (this.isActive) {
       clearInterval(this.timer);
       this.timer = setInterval(() => this.displayField(), 10000000);
@@ -205,37 +211,39 @@ const game = {
 const element = document.getElementById("main_draggable_container");
 const main = document.getElementById("main");
 
+// Функция, отвечающая за перемещение поля при ведении мышки
 element.onmousedown = function (event) {
   let shiftX = event.clientX - element.getBoundingClientRect().left;
   let shiftY = event.clientY - element.getBoundingClientRect().top;
 
   moveAt(event.pageX, event.pageY);
 
-  // moves the element at (pageX, pageY) coordinates
-  // taking initial shifts into account
+  // Перемещает поле на координаты shiftX и shiftY
   function moveAt(pageX, pageY) {
     element.style.left = pageX - shiftX + "px";
     element.style.top = pageY - shiftY + "px";
   }
 
+	// Повторяет это действие при каждом изменении мышки
   function onMouseMove(event) {
     moveAt(event.pageX, event.pageY);
   }
 
-  // move the element on mousemove
   document.addEventListener("mousemove", onMouseMove);
 
-  // drop the element, remove unneeded handlers
+  // Поставить элемент на место
   element.onmouseup = function () {
     document.removeEventListener("mousemove", onMouseMove);
     element.onmouseup = null;
   };
 };
 
+// Отключить высвечивание клона при движении поля
 element.ondragstart = function () {
   return false;
 };
 
+// При изменении зума, поставить элемент на центр поля
 function setFieldToCenter(event) {
   element.style.top = "2%";
   element.style.left = "31%";
