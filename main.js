@@ -1,5 +1,5 @@
 // Переменная отвечающая за размер поля
-let size = 25;
+let size = 30;
 
 let isDrawingMode = false;
 
@@ -163,6 +163,10 @@ const game = {
         return 0;
       });
     });
+
+    this.setFieldToCenter();
+    document.body.style.zoom = "100%";
+
     // Выводит его
     this.displayField();
   },
@@ -192,19 +196,37 @@ const game = {
     event.target.value = "";
     this.clearField();
   },
+
+  // При изменении зума, поставить элемент на центр поля
+  setFieldToCenter() {
+    element.style.top = "2%";
+    element.style.left = "31%";
+  },
 };
 
 const drawingModeButton = document.getElementById("drawingMode");
+const element = document.getElementById("main_draggable_container");
+const main = document.getElementById("main");
+let selected_cells = document.getElementsByClassName("cell");
 
 drawingModeButton.onclick = function (event) {
   isDrawingMode = !isDrawingMode;
-  isDrawingMode
-    ? (event.target.style.backgroundColor = "#333")
-    : (event.target.style.backgroundColor = "#fff");
+  if (isDrawingMode) {
+    event.target.innerText = "Drawing mode";
+    for (let i = 0; i < selected_cells.length; i++) {
+      let elem = selected_cells[i];
+      elem.onmousedown = null;
+    }
+  } else {
+		event.target.innerText = "Field move mode";
+		for (let i = 0; i < selected_cells.length; i++) {
+      let elem = selected_cells[i];
+      elem.onmousedown = function (event) {
+        drawCell(event);
+      };
+    }
+  }
 };
-
-const element = document.getElementById("main_draggable_container");
-const main = document.getElementById("main");
 
 // Функция, отвечающая за перемещение поля при ведении мышки
 element.onmousedown = function (event) {
@@ -216,14 +238,20 @@ element.onmousedown = function (event) {
 
     // Перемещает поле на координаты shiftX и shiftY
     function moveAt(pageX, pageY) {
-      element.style.left = pageX - shiftX + "px";
-      element.style.top = pageY - shiftY + "px";
+      let new_left = pageX - shiftX;
+      let new_top = pageY - shiftY;
+      element.style.left = `${new_left}px`;
+      element.style.top = `${new_top}px`;
     }
 
     // Повторяет это действие при каждом изменении мышки
     function onMouseMove(event) {
       moveAt(event.pageX, event.pageY);
     }
+
+    document.onclick = function () {
+      document.removeEventListener("mousemove", onMouseMove);
+    };
 
     document.addEventListener("mousemove", onMouseMove);
 
@@ -233,8 +261,6 @@ element.onmousedown = function (event) {
       element.onmouseup = null;
     };
   } else {
-    let selected_cells = document.getElementsByClassName("cell");
-
     function drawCell(event) {
       const selected_cell = event.target;
       const id = selected_cell.id.split("-");
@@ -250,6 +276,9 @@ element.onmousedown = function (event) {
 
     for (let i = 0; i < selected_cells.length; i++) {
       let elem = selected_cells[i];
+      elem.onmousedown = function (event) {
+        drawCell(event);
+      };
       elem.addEventListener("pointerenter", drawCell);
     }
 
@@ -262,9 +291,3 @@ element.onmousedown = function (event) {
     };
   }
 };
-
-// При изменении зума, поставить элемент на центр поля
-function setFieldToCenter(event) {
-  element.style.top = "2%";
-  element.style.left = "31%";
-}

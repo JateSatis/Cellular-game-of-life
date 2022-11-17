@@ -15,7 +15,7 @@
     <script src="./main.js" defer></script>
     <title>Game of life</title>
   </head>
-  <body onload="game.displayField()" onresize="setFieldToCenter(event)">
+  <body onload="game.displayField()" onresize="game.setFieldToCenter(event)">
     <nav>
       <button id="startSimulation" onclick="game.startSimulation()">
         <p>Start</p>
@@ -23,10 +23,11 @@
       <button onclick="game.clearField()">
         <p>Clear field</p>
       </button>
-      <button id="drawingMode"><p>Drawing mode</p></button>
+      <button id="drawingMode"><p>Field move mode</p></button>
       <input
         type="text"
         class="field_size_input"
+				placeholder="Set field size"
         onchange="game.changeFieldSize(event)"
       />
     </nav>

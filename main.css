@@ -9,9 +9,14 @@ body {
 
 nav {
   width: 30%;
+  padding: 10vh 0 !important;
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
   z-index: inherit;
   background-color: #dfdf90;
-  border-right: 1vh solid black;
+  border-right: 1vh solid #372725 !important;
 }
 
 #main {
@@ -54,18 +59,15 @@ nav {
 
 button {
   position: relative;
+  background-color: #a93a1c;
   display: grid;
   align-items: center;
   justify-content: center;
   padding: 0;
-  width: 20vw;
-  height: 10vh;
+  min-width: 20vw;
+  min-height: 10vh;
   font-size: 5vh;
   border: 2px solid white;
-}
-
-button:not(:nth-child(1)) {
-  margin-top: 10vh;
 }
 
 .bg-image {
@@ -81,16 +83,17 @@ p {
   text-decoration: none;
   width: -webkit-max-content;
   width: -moz-max-content;
-  width: max-content;
+  width: auto;
   font-size: 5vh !important;
+  color: white !important;
 }
 
 p::after {
   display: block;
   content: "";
   width: 0%;
-  height: 0.3vh;
-  background-color: black;
+  height: 0.5vh;
+  background-color: white;
   transition: 1s cubic-bezier(0, 0.68, 0.59, 1.07);
 }
 
