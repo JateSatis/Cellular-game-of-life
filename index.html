@@ -16,7 +16,11 @@
     <title>Game of life</title>
   </head>
   <body onload="game.displayField()" onresize="game.setFieldToCenter(event)">
-    <button id="pen" class="draw_button first_draw_button" onclick="setPen(event)">
+    <button
+      id="pen"
+      class="draw_button first_draw_button"
+      onclick="setPen(event)"
+    >
       <img
         class="draw_image"
         src="https://cdn-icons-png.flaticon.com/512/8450/8450814.png"
@@ -53,6 +57,12 @@
         class="field_size_input"
         placeholder="Set field size"
         onchange="game.changeFieldSize(event)"
+      />
+      <input
+        type="text"
+        class="field_size_input"
+        placeholder="Set speed in ms"
+        onchange="game.changeSimSpeed(event)"
       />
     </nav>
     <div id="main">

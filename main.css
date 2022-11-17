@@ -64,37 +64,37 @@ nav {
   align-items: center;
   justify-content: center;
   padding: 0;
-  min-width: 20vw;
-  min-height: 10vh;
+  width: 20vw;
+  height: 10vh;
   border: 0.5vh solid white !important;
   font-size: 5vh;
 }
 
 .draw_button {
-	position: absolute;
-	background-color: #dfdf90;
+  position: absolute;
+  background-color: #dfdf90;
   padding: 0;
   border: 0.5vh solid white !important;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	bottom: 5vh;
-	width: 10vh;
-	height: 10vh;
-	z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  bottom: 5vh;
+  width: 10vh;
+  height: 10vh;
+  z-index: 1000;
 }
 
 .draw_image {
-	height: 5vh;
+  height: 5vh;
 }
 
 .first_draw_button {
-	right: 5vh;
-	background-color: #e5ae2e;
+  right: 5vh;
+  background-color: #e5ae2e;
 }
 
 .second_draw_button {
-	right: 20vh;
+  right: 20vh;
 }
 
 .bg-image {
@@ -113,6 +113,7 @@ p {
   width: auto;
   font-size: 5vh !important;
   color: white !important;
+  line-height: 0;
 }
 
 p::after {
