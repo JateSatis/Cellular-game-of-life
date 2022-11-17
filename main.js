@@ -1,6 +1,8 @@
 // Переменная отвечающая за размер поля
 let size = 25;
 
+let isDrawingMode = false;
+
 const game = {
   // Запущена ли в данный момент игра
   isActive: false,
@@ -116,23 +118,7 @@ const game = {
   },
 
   // По нажатию на микроба его жизненное значение заменяется на противоположное
-  changeCellState(event, i, j) {
-    const selected_cell = event.target;
-    console.log(selected_cell.innerHTML);
-    this.field[i][j] = !this.field[i][j];
-    // Изменяется класс микроба, его значение, а также сразу меняется цвет, т.к при изменении класса цвет не меняется автоматически
-    if (selected_cell.innerText == "0") {
-      selected_cell.innerHTML = "1";
-      selected_cell.classList.remove("cell_dead");
-      selected_cell.classList.add("cell_alive");
-      selected_cell.style.backgroundColor = "#372725";
-    } else {
-      selected_cell.innerHTML = "0";
-      selected_cell.classList.remove("cell_alive");
-      selected_cell.classList.add("cell_dead");
-      selected_cell.style.backgroundColor = "#78862D";
-    }
-  },
+  changeCellState(event) {},
 
   // Для каждого обновленного микроба - обновляет для него html элемент на странице
   displayField() {
@@ -147,11 +133,11 @@ const game = {
       const row = document.createElement("div");
       row.id = i;
       row.className = "cell_row";
-			for (let j = 0; j < size; j++) {
-				// Создаем элемент, являющийся презентацией микроба на сайте
+      for (let j = 0; j < size; j++) {
+        // Создаем элемент, являющийся презентацией микроба на сайте
         const cell = document.createElement("div");
         cell.className = "cell";
-        cell.setAttribute("onclick", `game.changeCellState(event, ${i}, ${j})`);
+        cell.id = `${i}-${j}`;
         this.field[i][j]
           ? cell.classList.add("cell_dead")
           : cell.classList.add("cell_alive");
@@ -164,32 +150,32 @@ const game = {
 
   // Полностью очищает поле
   clearField() {
-		const button = document.getElementById("startSimulation");
-		// Очищает интервал, обновляющий симуляцию
+    const button = document.getElementById("startSimulation");
+    // Очищает интервал, обновляющий симуляцию
     clearInterval(this.timer);
-		this.timer = setInterval(() => this.displayField(), 100000000);
-		// Изменяет значение кнопки старт
+    this.timer = setInterval(() => this.displayField(), 100000000);
+    // Изменяет значение кнопки старт
     button.getElementsByTagName("p")[0].innerHTML = "Start";
-		this.isActive = false;
-		// Очищает поле
+    this.isActive = false;
+    // Очищает поле
     this.field = Array.apply(null, Array(100)).map((item) => {
       return Array.apply(null, Array(100)).map(function (item) {
         return 0;
       });
-		});
-		// Выводит его
+    });
+    // Выводит его
     this.displayField();
   },
 
   // Запускает симуляцию
   startSimulation() {
-		const button = document.getElementById("startSimulation");
-		// Логика замены слова внутри кнопки
+    const button = document.getElementById("startSimulation");
+    // Логика замены слова внутри кнопки
     button.getElementsByTagName("p")[0].innerHTML == "Start"
       ? (button.getElementsByTagName("p")[0].innerHTML = "Stop")
       : (button.getElementsByTagName("p")[0].innerHTML = "Start");
 
-		// Постановка интервала, который будет отвечать за скорость обновления симуляции
+    // Постановка интервала, который будет отвечать за скорость обновления симуляции
     if (this.isActive) {
       clearInterval(this.timer);
       this.timer = setInterval(() => this.displayField(), 10000000);
@@ -208,39 +194,73 @@ const game = {
   },
 };
 
+const drawingModeButton = document.getElementById("drawingMode");
+
+drawingModeButton.onclick = function (event) {
+  isDrawingMode = !isDrawingMode;
+  isDrawingMode
+    ? (event.target.style.backgroundColor = "#333")
+    : (event.target.style.backgroundColor = "#fff");
+};
+
 const element = document.getElementById("main_draggable_container");
 const main = document.getElementById("main");
 
 // Функция, отвечающая за перемещение поля при ведении мышки
 element.onmousedown = function (event) {
-  let shiftX = event.clientX - element.getBoundingClientRect().left;
-  let shiftY = event.clientY - element.getBoundingClientRect().top;
+  if (!isDrawingMode) {
+    let shiftX = event.clientX - element.getBoundingClientRect().left;
+    let shiftY = event.clientY - element.getBoundingClientRect().top;
 
-  moveAt(event.pageX, event.pageY);
-
-  // Перемещает поле на координаты shiftX и shiftY
-  function moveAt(pageX, pageY) {
-    element.style.left = pageX - shiftX + "px";
-    element.style.top = pageY - shiftY + "px";
-  }
-
-	// Повторяет это действие при каждом изменении мышки
-  function onMouseMove(event) {
     moveAt(event.pageX, event.pageY);
+
+    // Перемещает поле на координаты shiftX и shiftY
+    function moveAt(pageX, pageY) {
+      element.style.left = pageX - shiftX + "px";
+      element.style.top = pageY - shiftY + "px";
+    }
+
+    // Повторяет это действие при каждом изменении мышки
+    function onMouseMove(event) {
+      moveAt(event.pageX, event.pageY);
+    }
+
+    document.addEventListener("mousemove", onMouseMove);
+
+    // Поставить элемент на место
+    element.onmouseup = function () {
+      document.removeEventListener("mousemove", onMouseMove);
+      element.onmouseup = null;
+    };
+  } else {
+    let selected_cells = document.getElementsByClassName("cell");
+
+    function drawCell(event) {
+      const selected_cell = event.target;
+      const id = selected_cell.id.split("-");
+      let i = +id[0];
+      let j = +id[1];
+      game.field[i][j] = !game.field[i][j];
+      // Изменяется класс микроба, его значение, а также сразу меняется цвет, т.к при изменении класса цвет не меняется автоматически
+      selected_cell.innerHTML = "1";
+      selected_cell.classList.remove("cell_dead");
+      selected_cell.classList.add("cell_alive");
+      selected_cell.style.backgroundColor = "#372725";
+    }
+
+    for (let i = 0; i < selected_cells.length; i++) {
+      let elem = selected_cells[i];
+      elem.addEventListener("pointerenter", drawCell);
+    }
+
+    element.onmouseup = function () {
+      for (let i = 0; i < selected_cells.length; i++) {
+        let elem = selected_cells[i];
+        elem.removeEventListener("pointerenter", drawCell);
+        element.click = null;
+      }
+    };
   }
-
-  document.addEventListener("mousemove", onMouseMove);
-
-  // Поставить элемент на место
-  element.onmouseup = function () {
-    document.removeEventListener("mousemove", onMouseMove);
-    element.onmouseup = null;
-  };
-};
-
-// Отключить высвечивание клона при движении поля
-element.ondragstart = function () {
-  return false;
 };
 
 // При изменении зума, поставить элемент на центр поля
