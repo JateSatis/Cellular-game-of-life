@@ -16,18 +16,42 @@
     <title>Game of life</title>
   </head>
   <body onload="game.displayField()" onresize="game.setFieldToCenter(event)">
+    <button id="pen" class="draw_button first_draw_button" onclick="setPen(event)">
+      <img
+        class="draw_image"
+        src="https://cdn-icons-png.flaticon.com/512/8450/8450814.png"
+        alt=""
+      />
+    </button>
+    <button
+      id="rubber"
+      class="draw_button second_draw_button"
+      onclick="setRubber(event)"
+    >
+      <img
+        src="https://cdn-icons-png.flaticon.com/512/1076/1076742.png"
+        alt=""
+        class="draw_image"
+      />
+    </button>
     <nav>
-      <button id="startSimulation" onclick="game.startSimulation()">
+      <button
+        class="main_button"
+        id="startSimulation"
+        onclick="game.startSimulation()"
+      >
         <p>Start</p>
       </button>
-      <button onclick="game.clearField()">
+      <button class="main_button" onclick="game.clearField()">
         <p>Clear field</p>
       </button>
-      <button id="drawingMode"><p>Field move mode</p></button>
+      <button class="main_button" id="drawingMode">
+        <p>Field move mode</p>
+      </button>
       <input
         type="text"
         class="field_size_input"
-				placeholder="Set field size"
+        placeholder="Set field size"
         onchange="game.changeFieldSize(event)"
       />
     </nav>

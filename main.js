@@ -1,8 +1,13 @@
 // Переменная отвечающая за размер поля
 let size = 30;
 
+// Is drawing mode selected
 let isDrawingMode = false;
 
+// Is pen mode selected
+let isPen = true;
+
+// Main object creating the field and all the cells
 const game = {
   // Запущена ли в данный момент игра
   isActive: false,
@@ -164,6 +169,7 @@ const game = {
       });
     });
 
+    // При очищении поля ставим его на начальную позицию
     this.setFieldToCenter();
     document.body.style.zoom = "100%";
 
@@ -199,40 +205,59 @@ const game = {
 
   // При изменении зума, поставить элемент на центр поля
   setFieldToCenter() {
-    element.style.top = "2%";
-    element.style.left = "31%";
+    fieldDraggableContainer.style.top = "2%";
+    fieldDraggableContainer.style.left = "31%";
   },
 };
 
+// Getting all the elements that need to be used or updated
 const drawingModeButton = document.getElementById("drawingMode");
-const element = document.getElementById("main_draggable_container");
+const fieldDraggableContainer = document.getElementById(
+  "main_draggable_container"
+);
 const main = document.getElementById("main");
 let selected_cells = document.getElementsByClassName("cell");
+const penButton = document.getElementById("pen");
+const rubberButton = document.getElementById("rubber");
 
+// Function changing the state of the drawing mode button. It also changes the state of the drawingMode variable
 drawingModeButton.onclick = function (event) {
   isDrawingMode = !isDrawingMode;
   if (isDrawingMode) {
     event.target.innerText = "Drawing mode";
+  } else {
+		event.target.innerText = "Field move mode";
+		// When we change to the move mode, clear the drawing event on the cells
     for (let i = 0; i < selected_cells.length; i++) {
       let elem = selected_cells[i];
       elem.onmousedown = null;
     }
-  } else {
-		event.target.innerText = "Field move mode";
-		for (let i = 0; i < selected_cells.length; i++) {
-      let elem = selected_cells[i];
-      elem.onmousedown = function (event) {
-        drawCell(event);
-      };
-    }
   }
 };
 
+// Set the mode to the pen
+function setPen(event) {
+	isPen = true;
+	rubberButton.style.backgroundColor = "#dfdf90";
+	penButton.style.backgroundColor = "#e5ae2e";
+}
+
+// Set the mode to the pen
+function setRubber(event) {
+	isPen = false;
+	penButton.style.backgroundColor = "#dfdf90";
+  rubberButton.style.backgroundColor = "#e5ae2e";
+}
+
 // Функция, отвечающая за перемещение поля при ведении мышки
-element.onmousedown = function (event) {
+fieldDraggableContainer.onmousedown = function (event) {
+
+	// Поле перемещается если включен режим пережвижения поля
   if (!isDrawingMode) {
-    let shiftX = event.clientX - element.getBoundingClientRect().left;
-    let shiftY = event.clientY - element.getBoundingClientRect().top;
+    let shiftX =
+      event.clientX - fieldDraggableContainer.getBoundingClientRect().left;
+    let shiftY =
+      event.clientY - fieldDraggableContainer.getBoundingClientRect().top;
 
     moveAt(event.pageX, event.pageY);
 
@@ -240,8 +265,8 @@ element.onmousedown = function (event) {
     function moveAt(pageX, pageY) {
       let new_left = pageX - shiftX;
       let new_top = pageY - shiftY;
-      element.style.left = `${new_left}px`;
-      element.style.top = `${new_top}px`;
+      fieldDraggableContainer.style.left = `${new_left}px`;
+      fieldDraggableContainer.style.top = `${new_top}px`;
     }
 
     // Повторяет это действие при каждом изменении мышки
@@ -256,24 +281,35 @@ element.onmousedown = function (event) {
     document.addEventListener("mousemove", onMouseMove);
 
     // Поставить элемент на место
-    element.onmouseup = function () {
-      document.removeEventListener("mousemove", onMouseMove);
-      element.onmouseup = null;
-    };
-  } else {
+		fieldDraggableContainer.onmouseup = function () {
+			document.removeEventListener("mousemove", onMouseMove);
+			fieldDraggableContainer.onmouseup = null;
+		};
+	} else {
+    // В ином случае запускается логика по рисованию на поле
     function drawCell(event) {
       const selected_cell = event.target;
       const id = selected_cell.id.split("-");
       let i = +id[0];
       let j = +id[1];
-      game.field[i][j] = !game.field[i][j];
-      // Изменяется класс микроба, его значение, а также сразу меняется цвет, т.к при изменении класса цвет не меняется автоматически
-      selected_cell.innerHTML = "1";
-      selected_cell.classList.remove("cell_dead");
-      selected_cell.classList.add("cell_alive");
-      selected_cell.style.backgroundColor = "#372725";
+      if (isPen) {
+        game.field[i][j] = 1;
+        // Изменяется класс микроба, его значение, а также сразу меняется цвет, т.к при изменении класса цвет не меняется автоматически
+        selected_cell.innerHTML = "1";
+        selected_cell.classList.remove("cell_dead");
+        selected_cell.classList.add("cell_alive");
+        selected_cell.style.backgroundColor = "#372725";
+      } else {
+        game.field[i][j] = 0;
+        // Изменяется класс микроба, его значение, а также сразу меняется цвет, т.к при изменении класса цвет не меняется автоматически
+        selected_cell.innerHTML = "0";
+        selected_cell.classList.remove("cell_alive");
+        selected_cell.classList.add("cell_dead");
+        selected_cell.style.backgroundColor = "#78862d";
+      }
     }
 
+		// Creating an event for the first press on the mouse
     for (let i = 0; i < selected_cells.length; i++) {
       let elem = selected_cells[i];
       elem.onmousedown = function (event) {
@@ -282,11 +318,12 @@ element.onmousedown = function (event) {
       elem.addEventListener("pointerenter", drawCell);
     }
 
-    element.onmouseup = function () {
+    // Clearance of events on each individual cell
+    fieldDraggableContainer.onmouseup = function () {
       for (let i = 0; i < selected_cells.length; i++) {
         let elem = selected_cells[i];
         elem.removeEventListener("pointerenter", drawCell);
-        element.click = null;
+        fieldDraggableContainer.click = null;
       }
     };
   }

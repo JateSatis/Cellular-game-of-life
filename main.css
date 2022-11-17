@@ -57,7 +57,7 @@ nav {
   background-color: #78862d;
 }
 
-button {
+.main_button {
   position: relative;
   background-color: #a93a1c;
   display: grid;
@@ -66,8 +66,35 @@ button {
   padding: 0;
   min-width: 20vw;
   min-height: 10vh;
+  border: 0.5vh solid white !important;
   font-size: 5vh;
-  border: 2px solid white;
+}
+
+.draw_button {
+	position: absolute;
+	background-color: #dfdf90;
+  padding: 0;
+  border: 0.5vh solid white !important;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	bottom: 5vh;
+	width: 10vh;
+	height: 10vh;
+	z-index: 1000;
+}
+
+.draw_image {
+	height: 5vh;
+}
+
+.first_draw_button {
+	right: 5vh;
+	background-color: #e5ae2e;
+}
+
+.second_draw_button {
+	right: 20vh;
 }
 
 .bg-image {
