@@ -152,6 +152,25 @@ const game = {
     }
   },
 
+  // Запускает симуляцию
+  startSimulation() {
+    const button = document.getElementById("startSimulation");
+    // Логика замены слова внутри кнопки
+    button.getElementsByTagName("p")[0].innerHTML == "Start"
+      ? (button.getElementsByTagName("p")[0].innerHTML = "Stop")
+      : (button.getElementsByTagName("p")[0].innerHTML = "Start");
+
+    // Постановка интервала, который будет отвечать за скорость обновления симуляции
+    if (this.isActive) {
+      clearInterval(this.timer);
+      this.timer = setInterval(() => this.displayField(), 10000000);
+    } else {
+      clearInterval(this.timer);
+      this.timer = setInterval(() => this.displayField(), speed);
+    }
+    this.isActive = !this.isActive;
+  },
+
   // Полностью очищает поле
   clearField() {
     const button = document.getElementById("startSimulation");
@@ -174,25 +193,6 @@ const game = {
 
     // Выводит его
     this.displayField();
-  },
-
-  // Запускает симуляцию
-  startSimulation() {
-    const button = document.getElementById("startSimulation");
-    // Логика замены слова внутри кнопки
-    button.getElementsByTagName("p")[0].innerHTML == "Start"
-      ? (button.getElementsByTagName("p")[0].innerHTML = "Stop")
-      : (button.getElementsByTagName("p")[0].innerHTML = "Start");
-
-    // Постановка интервала, который будет отвечать за скорость обновления симуляции
-    if (this.isActive) {
-      clearInterval(this.timer);
-      this.timer = setInterval(() => this.displayField(), 10000000);
-    } else {
-      clearInterval(this.timer);
-      this.timer = setInterval(() => this.displayField(), speed);
-    }
-    this.isActive = !this.isActive;
   },
 
   // На основе заданного параметра изменяет значение глобальной переменной и обновляет поле на нужный размер
